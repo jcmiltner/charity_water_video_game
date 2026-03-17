@@ -54,6 +54,8 @@
       <!-- Scrolling ground track -->
       <div id="ground">
         <div id="ground-track"></div>
+        <!-- Rough-patch cue that scrolls in from the right before each bump -->
+        <div id="road-bump" class="hidden"></div>
       </div>
 
       <!-- Character + Bucket assembly -->
@@ -105,6 +107,8 @@
     <!-- Drip warning overlay -->
     <div id="drip-warning" class="hidden">💦 SPILLING!</div>
 
+
+
   </div><!-- end game-screen -->
 
   <!-- ========== GAME OVER SCREEN ========== -->
@@ -114,6 +118,7 @@
       <p id="gameover-distance" class="gameover-stat"></p>
       <p id="gameover-message" class="gameover-message"></p>
       <button id="play-again-btn" class="btn btn-primary">▶ Play Again</button>
+      <a id="learn-more-btn" class="btn btn-charity" href="https://www.charitywater.org/" target="_blank" rel="noopener noreferrer">💧 Learn more at charity: water</a>
     </div>
   </div>
 

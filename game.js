@@ -24,6 +24,7 @@ const bucketArm       = document.getElementById('bucket-arm');
 const bucketWater     = document.getElementById('bucket-water');
 const tiltNeedle      = document.getElementById('tilt-needle');
 const dripWarning     = document.getElementById('drip-warning');
+const roadBump        = document.getElementById('road-bump');
 
 const startBtn        = document.getElementById('start-btn');
 const resetBtn        = document.getElementById('reset-btn');
@@ -44,6 +45,11 @@ let speed;          // multiplier, starts at 1 and grows over time
 
 let gameRunning;    // bool: is the game loop active?
 let lastTimestamp;  // used to calculate delta time in the loop
+let bumpTimer;      // countdown (seconds) until next terrain bump
+let bumpWarnShown;      // whether the road-bump cue has been spawned this cycle
+let activeBumpTimer;    // seconds remaining of active sustained bump force
+let activeBumpDir;      // direction of active bump force (−1 or +1)
+let activeBumpStrength; // magnitude of active bump force (degrees/second)
 
 // Track which keys are currently pressed
 const keys = { left: false, right: false };
@@ -75,6 +81,11 @@ function resetGame() {
   speed       = SPEED_START;
   gameRunning = false;
   lastTimestamp = null;
+  bumpTimer         = 2.0;  // first bump after 2 s
+  bumpWarnShown      = false;
+  activeBumpTimer    = 0;
+  activeBumpDir      = 0;
+  activeBumpStrength = 0;
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -101,6 +112,8 @@ function startGame() {
 // ─────────────────────────────────────────────────────────────
 function endGame() {
   gameRunning = false;
+  roadBump.classList.add('hidden');
+  activeBumpTimer = 0;
 
   // Round distance to one decimal
   const metres = Math.round(distance * 10) / 10;   // meters walked
@@ -201,6 +214,36 @@ function gameLoop(timestamp) {
     tilt += TILT_INPUT_RATE * dt;
   }
 
+  // ── 1b. Terrain bumps — grow in force and frequency with speed
+  bumpTimer -= dt;
+
+  // Spawn approaching rock visual 1.5 s before impact (once per cycle)
+  if (speed > 1.0 && bumpTimer <= 1.5 && !bumpWarnShown) {
+    bumpWarnShown = true;
+    roadBump.style.animationDuration = `${Math.max(0.1, bumpTimer).toFixed(2)}s`;
+    roadBump.classList.remove('hidden');
+  }
+
+  if (bumpTimer <= 0) {
+    // Stronger start: higher multiplier, sustained over ~0.55 s
+    const intensity = Math.max(0, (speed - 1.0) * 13);
+    if (intensity > 0) {
+      activeBumpDir      = Math.random() < 0.5 ? -1 : 1;
+      activeBumpStrength = intensity * (0.6 + Math.random() * 0.4);
+      activeBumpTimer    = 0.55;
+    }
+    roadBump.classList.add('hidden');
+    bumpWarnShown = false;
+    // Bumps arrive more frequently as speed climbs
+    bumpTimer = Math.max(0.5, 2.5 - (speed - 1) * 0.45);
+  }
+
+  // Apply sustained bump force for its active duration
+  if (activeBumpTimer > 0) {
+    tilt += activeBumpDir * activeBumpStrength * dt;
+    activeBumpTimer = Math.max(0, activeBumpTimer - dt);
+  }
+
   // ── 2. Auto-centre tilt toward 0 when no key pressed ─────
   if (!keys.left && !keys.right) {
     if (tilt > 0) {
@@ -224,7 +267,7 @@ function gameLoop(timestamp) {
 
   // ── 6. Adjust ground-scroll animation speed ──────────────
   // CSS animation duration controls scroll speed: shorter = faster
-  const baseScrollDuration = 1.2;         // seconds at speed 1.0
+  const baseScrollDuration = 2.5;         // seconds at speed 1.0
   const scrollDuration = baseScrollDuration / speed;
   groundTrack.style.animationDuration = `${scrollDuration.toFixed(2)}s`;
 

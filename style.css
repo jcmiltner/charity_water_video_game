@@ -229,7 +229,7 @@ body {
     #b8914e 80px
   );
   border-radius: 4px;
-  animation: scrollGround 1.2s linear infinite;
+  animation: scrollGround 2.5s linear infinite;
 }
 
 @keyframes scrollGround {
@@ -443,6 +443,40 @@ body {
 }
 
 .hidden { display: none !important; }
+
+/* ---------- Road bump cue (approaches from right) ---------- */
+#road-bump {
+  position: absolute;
+  bottom: 20px;
+  height: 22px;
+  width: 90px;
+  background: linear-gradient(180deg, #8b5e0a 0%, #5a3800 100%);
+  border-radius: 3px;
+  z-index: 5;
+  /* Rock lumps protruding above the path */
+  box-shadow:
+    10px -5px 0 5px #7a4e08,
+    28px -7px 0 6px #6b4200,
+    52px -4px 0 5px #7a4e08,
+    70px -6px 0 4px #6b4200;
+  animation: bumpApproach 1.5s linear forwards;
+}
+
+@keyframes bumpApproach {
+  from { left: 106%; }
+  to   { left: 46%; }
+}
+
+/* ---------- Learn more button ---------- */
+.btn-charity {
+  display: inline-block;
+  background: linear-gradient(135deg, #f0a500, #ffd740);
+  color: #1a3a4a;
+  margin-top: 14px;
+  text-decoration: none;
+  font-size: 0.95rem;
+  padding: 11px 32px;
+}
 
 /* ---------- GAME OVER SCREEN ---------- */
 #gameover-screen .screen-content {
