@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Water Run: Bucket Balance Game</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ========== START SCREEN ========== -->
+  <div id="start-screen" class="screen active">
+    <div class="screen-content">
+      <h1 class="game-title">💧 Water Run</h1>
+      <h2 class="game-subtitle">Bucket Balance Game</h2>
+      <p class="instructions">
+        Help our water carrier bring fresh water home!<br><br>
+        <strong>← → Arrow Keys</strong> (or <strong>A / D</strong>) to balance the bucket.<br>
+        Walk as far as you can without spilling all the water!
+      </p>
+      <div class="tip-box">
+        💡 <em>Tip: Gentle taps keep the water steady. Big tilts spill fast!</em>
+      </div>
+      <button id="start-btn" class="btn btn-primary">▶ Start Walking!</button>
+    </div>
+  </div>
+
+  <!-- ========== GAME SCREEN ========== -->
+  <div id="game-screen" class="screen">
+
+    <!-- Top HUD -->
+    <div id="hud">
+      <div class="hud-item">
+        <span class="hud-label">🚶 Distance</span>
+        <span id="distance-display" class="hud-value">0 m</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">💧 Water Level</span>
+        <div id="water-bar-container">
+          <div id="water-bar"></div>
+          <span id="water-percent">100%</span>
+        </div>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">⚡ Speed</span>
+        <span id="speed-display" class="hud-value">1.0x</span>
+      </div>
+      <button id="reset-btn" class="btn btn-secondary">↺ Reset</button>
+    </div>
+
+    <!-- Game World -->
+    <div id="game-world">
+
+      <!-- Scrolling ground track -->
+      <div id="ground">
+        <div id="ground-track"></div>
+        <!-- Rough-patch cue that scrolls in from the right before each bump -->
+        <div id="road-bump" class="hidden"></div>
+      </div>
+
+      <!-- Character + Bucket assembly -->
+      <div id="character-assembly">
+
+        <!-- Bucket (rotates based on tilt) -->
+        <div id="bucket-arm">
+          <div id="bucket-wrapper">
+            <!-- Bucket body -->
+            <div id="bucket">
+              <!-- Water inside bucket -->
+              <div id="bucket-water"></div>
+              <!-- Bucket handle -->
+              <div id="bucket-handle"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Character body -->
+        <div id="character">
+          <!-- Head -->
+          <div id="char-head"></div>
+          <!-- Torso -->
+          <div id="char-body"></div>
+          <!-- Arms -->
+          <div id="char-arm-left" class="char-arm"></div>
+          <div id="char-arm-right" class="char-arm arm-raised"></div>
+          <!-- Legs -->
+          <div id="char-legs">
+            <div id="leg-left" class="leg"></div>
+            <div id="leg-right" class="leg"></div>
+          </div>
+        </div>
+
+      </div><!-- end character-assembly -->
+
+      <!-- Tilt indicator bar -->
+      <div id="tilt-indicator-container">
+        <span class="tilt-label">L</span>
+        <div id="tilt-track">
+          <div id="tilt-center-mark"></div>
+          <div id="tilt-needle"></div>
+        </div>
+        <span class="tilt-label">R</span>
+      </div>
+
+    </div><!-- end game-world -->
+
+    <!-- Drip warning overlay -->
+    <div id="drip-warning" class="hidden">💦 SPILLING!</div>
+
+
+
+  </div><!-- end game-screen -->
+
+  <!-- ========== GAME OVER SCREEN ========== -->
+  <div id="gameover-screen" class="screen">
+    <div class="screen-content">
+      <h1 class="gameover-title">💧 Water Gone!</h1>
+      <p id="gameover-distance" class="gameover-stat"></p>
+      <p id="gameover-message" class="gameover-message"></p>
+      <button id="play-again-btn" class="btn btn-primary">▶ Play Again</button>
+      <a id="learn-more-btn" class="btn btn-charity" href="https://www.charitywater.org/" target="_blank" rel="noopener noreferrer">💧 Learn more at charity: water</a>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
